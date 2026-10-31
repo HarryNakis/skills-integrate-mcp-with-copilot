@@ -10,7 +10,31 @@
     <header>
       <h1>Mergington High School</h1>
       <h2>Extracurricular Activities</h2>
+      <div class="teacher-controls">
+        <span id="teacher-status" role="status">Viewing as a student</span>
+        <button id="teacher-login-button" type="button">Teacher sign in</button>
+        <button id="teacher-logout-button" class="hidden" type="button">Sign out</button>
+      </div>
     </header>
+
+    <dialog id="teacher-login-dialog" aria-labelledby="teacher-login-title">
+      <form id="teacher-login-form">
+        <h3 id="teacher-login-title">Teacher sign in</h3>
+        <p id="teacher-login-feedback" class="hidden" role="alert"></p>
+        <div class="form-group">
+          <label for="teacher-username">Username:</label>
+          <input id="teacher-username" name="username" type="text" autocomplete="username" required autofocus />
+        </div>
+        <div class="form-group">
+          <label for="teacher-password">Password:</label>
+          <input id="teacher-password" name="password" type="password" autocomplete="current-password" required />
+        </div>
+        <div class="dialog-actions">
+          <button type="submit">Sign in</button>
+          <button id="teacher-login-cancel" class="secondary-button" type="button">Cancel</button>
+        </div>
+      </form>
+    </dialog>
 
     <main>
       <section id="activities-container">
@@ -23,6 +47,7 @@
 
       <section id="signup-container">
         <h3>Sign Up for an Activity</h3>
+        <p id="teacher-access-note" class="access-note">Teacher sign-in is required to manage registrations.</p>
         <form id="signup-form">
           <div class="form-group">
             <label for="email">Student Email:</label>

@@ -5,7 +5,9 @@ A super simple FastAPI application that allows students to view and sign up for 
 ## Features
 
 - View all available extracurricular activities
-- Sign up for activities
+- Teacher-only sign-up and unregister actions
+- Public activity and participant lists
+- Expiring teacher sign-in sessions
 
 ## Getting Started
 
@@ -30,7 +32,30 @@ A super simple FastAPI application that allows students to view and sign up for 
 | Method | Endpoint                                                          | Description                                                         |
 | ------ | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
 | GET    | `/activities`                                                     | Get all activities with their details and current participant count |
-| POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity                                             |
+| POST   | `/auth/login`                                                      | Sign in as a teacher and receive a bearer token                     |
+| POST   | `/auth/logout`                                                     | Revoke the current teacher session                                  |
+| POST   | `/activities/{activity_name}/signup?email=student@mergington.edu` | Sign up for an activity (teacher bearer token required)             |
+| DELETE | `/activities/{activity_name}/unregister?email=student@mergington.edu` | Unregister a student (teacher bearer token required)             |
+
+## Teacher accounts
+
+Teacher credentials are read from `src/teachers.json`, which is ignored by git. Create a password hash without putting the password in shell history:
+
+```sh
+python -c 'import getpass, hashlib, secrets; password=getpass.getpass("Teacher password: "); salt=secrets.token_hex(16); iterations=600000; digest=hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), iterations).hex(); print(f"pbkdf2_sha256${iterations}${salt}${digest}")'
+```
+
+Create `src/teachers.json` with the generated hash:
+
+```json
+{
+   "teachers": {
+      "teacher-username": "pbkdf2_sha256$600000$replace-with-salt$replace-with-hash"
+   }
+}
+```
+
+The example hash above is a placeholder; replace it with the command output. Teacher sessions expire after one hour and are held in memory, so a server restart signs out all teachers. Keep the credentials file private and use HTTPS when exposing the app beyond a trusted local environment.
 
 ## Data Model
 
